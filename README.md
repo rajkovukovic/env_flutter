@@ -1,9 +1,9 @@
-# flutter_dotenv
+# flutter_env
 
 [![Pub Version][pub-badge]][pub]
 
-[pub]: https://pub.dartlang.org/packages/flutter_dotenv
-[pub-badge]: https://img.shields.io/pub/v/flutter_dotenv.svg
+[pub]: https://pub.dartlang.org/packages/flutter_env
+[pub-badge]: https://img.shields.io/pub/v/flutter_env.svg
 
 Load configuration at runtime from a `.env` file which can be used throughout the application.
 
@@ -17,9 +17,7 @@ Load configuration at runtime from a `.env` file which can be used throughout th
 
 # About
 
-This library is a fork of [mockturtl/dotenv] dart library, initially with slight changes to make it work with flutter.
-
-[mockturtl/dotenv]: https://pub.dartlang.org/packages/dotenv
+This library is a fork of [java-james/flutter_dotenv](https://github.com/java-james/flutter_dotenv) dart library, with slight changes to make it read stage specific .env files.
 
 An _environment_ is the set of variables known to a process (say, `PATH`, `PORT`, ...).
 It is desirable to mimic the production environment during development (testing,
@@ -44,22 +42,27 @@ ESCAPED_DOLLAR_SIGN='$1000'
 
 > Note: If deploying to web server, ensure that the config file is uploaded and not ignored. (Whitelist the config file on the server, or name the config file without a leading `.`)
 
-2. Add the `.env` file to your assets bundle in `pubspec.yaml`. **Ensure that the path corresponds to the location of the .env file!**
+2. Add all `.env` files to your assets bundle in `pubspec.yaml`. **Ensure that the path corresponds to the location of the .env file!**
 
 ```yml
 assets:
   - .env
+  - .env.development
+  - .env.production
+  - .env.test
+  - .env.local
+  - .env.development.local
+  - .env.production.local
+  - .env.test.local
 ```
 
-3. Remember to add the `.env` file as an entry in your `.gitignore` if it isn't already unless you want it included in your version control.
+3. Remember to add all the `.env` files as an entries in your `.gitignore` if it isn't already unless you want it included in your version control.
 
 ```txt
 *.env
 ```
 
-4. Load the `.env` file in `main.dart`. Note that `flutter_dotenv >=5.0.0` has a slightly different syntax for consuming the DotEnv data.
-
-**v5.0.0 and later**
+4. Load the `.env` file in `main.dart`. 
 
 ```dart
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -72,8 +75,8 @@ Future main() async {
   // To load the .env file contents into dotenv.
   // NOTE: fileName defaults to .env and can be omitted in this case.
   // Ensure that the filename corresponds to the path in step 1 and 2.
-  await dotenv.load(fileName: ".env");
-  //...runapp
+  await dotenv.load();
+  //... run the app
 }
 ```
 
@@ -84,29 +87,24 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 dotenv.env['VAR_NAME'];
 ```
 
-**Before v5.0.0**
-
-```dart
-import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
-
-Future main() async {
-  await DotEnv.load(fileName: ".env");
-  //...runapp
-}
-```
-
-Access env using:
-
-```dart
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-env['VAR_NAME'];
-```
-
 Optionally you could map `env` after load to a config model to access a config with types.
+
+# What other .env files can be used?
+
+- `.env`: Default.  
+- `.env.local`: Local overrides. This file is loaded for all environments except test.
+- `.env.development`, `.env.test`, `.env.production`: Environment-specific settings.  
+- `.env.development.local`, `.env.test.local`, `.env.production`.local: Local overrides of environment-specific settings.
+
+## Files on the left have more priority than files on the right:
+
+flutter run: `.env.development.local`, `.env.local`, `.env.development`, `.env`  
+npm build: `.env.production.local`, `.env.local`, `.env.production`, `.env`  
+flutter test: `.env.test.local`, `.env.test`, `.env` (note `.env.local` is missing)
 
 # Advanced usage
 
-Refer to the `test/dotenv_test.dart` file for a better idea of the behaviour of the `.env` parser.
+Refer to the `test/dotenv_test.dart` file for a better idea of the behavior of the `.env` parser.
 
 ## Referencing
 
@@ -195,33 +193,6 @@ Use the [issue tracker][tracker] for bug reports and feature requests.
 
 Pull requests are welcome.
 
-[tracker]: https://github.com/java-james/flutter_dotenv/issues
-
-# Prior art
-
-[flutter_dotenv]: https://pub.dartlang.org/packages/dotenv
-
-- [mockturtl/dotenv][] (dart)
-- [bkeepers/dotenv][] (ruby)
-- [motdotla/dotenv][] (node)
-- [theskumar/python-dotenv][] (python)
-- [joho/godotenv][] (go)
-- [slapresta/rust-dotenv][] (rust)
-- [chandu/dotenv][] (c#)
-- [tpope/lein-dotenv][], [rentpath/clj-dotenv][] (clojure)
-- [mefellows/sbt-dotenv][] (scala)
-- [greenspun/dotenv][] (half of common lisp)
-
-[mockturtl/dotenv]: https://pub.dartlang.org/packages/dotenv
-[bkeepers/dotenv]: https://github.com/bkeepers/dotenv
-[motdotla/dotenv]: https://github.com/motdotla/dotenv
-[theskumar/python-dotenv]: https://github.com/theskumar/python-dotenv
-[joho/godotenv]: https://github.com/joho/godotenv
-[slapresta/rust-dotenv]: https://github.com/slapresta/rust-dotenv
-[chandu/dotenv]: https://github.com/Chandu/DotEnv
-[tpope/lein-dotenv]: https://github.com/tpope/lein-dotenv
-[rentpath/clj-dotenv]: https://github.com/rentpath/clj-dotenv
-[mefellows/sbt-dotenv]: https://github.com/mefellows/sbt-dotenv
-[greenspun/dotenv]: https://www.youtube.com/watch?v=pUjJU8Bbn3g
+[tracker]: https://github.com/rajkovukovic/flutter_env/issues
 
 # license: [MIT](LICENSE)

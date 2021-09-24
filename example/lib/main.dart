@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_env/flutter_env.dart';
 
 Future main() async {
-  await dotenv.load(fileName: "assets/.env", mergeWith: {
+  await dotenv.load(fileNames: [
+    "assets/.env"
+  ], mergeWith: {
     'TEST_VAR': '5',
   }); // mergeWith optional, you can include Platform.environment for Mobile/Desktop app
 
@@ -33,7 +35,8 @@ class MyApp extends StatelessWidget {
                     Text('Original'),
                     Divider(),
                     Text(snapshot.data ?? ''),
-                    Text(dotenv.get('MISSING', fallback: 'Default fallback value')),
+                    Text(dotenv.get('MISSING',
+                        fallback: 'Default fallback value')),
                   ],
                 ),
               ),
