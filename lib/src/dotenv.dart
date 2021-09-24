@@ -17,7 +17,7 @@ import 'parser.dart';
 /// using the env getter of dotenv (dotenv.env).
 /// You may wish to prefix the import.
 ///
-///     import 'package:flutter_dotenv/flutter_dotenv.dart';
+///     import 'package:env_flutter/env_flutter.dart';
 ///
 ///     void main() async {
 ///       await dotenv.load();

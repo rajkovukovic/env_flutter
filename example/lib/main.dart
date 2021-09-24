@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_env/flutter_env.dart';
+import 'package:env_flutter/env_flutter.dart';
 
 Future main() async {
   await dotenv.load(fileNames: [

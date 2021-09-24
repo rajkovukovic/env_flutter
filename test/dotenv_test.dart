@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter_env/flutter_env.dart';
+import 'package:env_flutter/env_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -1,9 +1,9 @@
-# flutter_env
+# env_flutter
 
 [![Pub Version][pub-badge]][pub]
 
-[pub]: https://pub.dartlang.org/packages/flutter_env
-[pub-badge]: https://img.shields.io/pub/v/flutter_env.svg
+[pub]: https://pub.dartlang.org/packages/env_flutter
+[pub-badge]: https://img.shields.io/pub/v/env_flutter.svg
 
 Load configuration at runtime from a `.env` file which can be used throughout the application.
 
@@ -65,7 +65,7 @@ assets:
 4. Load the `.env` file in `main.dart`. 
 
 ```dart
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:env_flutter/env_flutter.dart';
 
 // DotEnv dotenv = DotEnv() is automatically called during import.
 // If you want to load multiple dotenv files or name your dotenv object differently, you can do the following and import the singleton into the relavant files:
@@ -83,7 +83,7 @@ Future main() async {
 You can then access variables from `.env` throughout the application
 
 ```dart
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:env_flutter/env_flutter.dart';
 dotenv.env['VAR_NAME'];
 ```
 
@@ -193,6 +193,6 @@ Use the [issue tracker][tracker] for bug reports and feature requests.
 
 Pull requests are welcome.
 
-[tracker]: https://github.com/rajkovukovic/flutter_env/issues
+[tracker]: https://github.com/rajkovukovic/env_flutter/issues
 
 # license: [MIT](LICENSE)

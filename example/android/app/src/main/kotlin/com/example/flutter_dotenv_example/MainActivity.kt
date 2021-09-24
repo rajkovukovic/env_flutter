@@ -1,4 +1,4 @@
-package com.example.flutter_dotenv_example
+package com.example.env_flutter_example
 
 import io.flutter.embedding.android.FlutterActivity
 

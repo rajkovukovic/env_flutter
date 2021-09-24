@@ -10,5 +10,5 @@ contributing
 - Use [well-formatted commit messages][git-log-fmt].
 
 
-[gh-issues]: https://github.com/rajkovukovic/flutter_env/issues
+[gh-issues]: https://github.com/rajkovukovic/env_flutter/issues
 [git-log-fmt]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html

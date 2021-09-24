@@ -1,4 +1,4 @@
-# flutter_dotenv_example
+# env_flutter_example
 
 A new Flutter project.
 
