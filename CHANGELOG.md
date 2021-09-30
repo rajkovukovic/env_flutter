@@ -8,6 +8,10 @@ Release notes are available on [github][notes].
 [pub-semver-readme]: https://pub.dartlang.org/packages/pub_semver
 [notes]: https://github.com/rajkovukovic/env_flutter/releases
 
+# 0.1.2
+
+Fix: lib not working in a browser
+
 # 0.1.1
 
 Rename entry file to env_flutter.dart

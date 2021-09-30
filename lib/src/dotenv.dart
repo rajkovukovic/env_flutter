@@ -69,7 +69,7 @@ class DotEnv {
     clean();
     if (fileNames == null) {
       // test mode
-      if (Platform.environment.containsKey('FLUTTER_TEST')) {
+      if (isTestEnvironment()) {
         fileNames = const [
           '.env',
           '.env.test',
@@ -160,5 +160,14 @@ class DotEnv {
     } on FlutterError {
       return Future.value(<String>[]);
     }
+  }
+}
+
+bool isTestEnvironment() {
+  try {
+    return Platform.environment.containsKey('FLUTTER_TEST');
+    // ignore: avoid_catches_without_on_clauses
+  } catch (e) {
+    return false;
   }
 }

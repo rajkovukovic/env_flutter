@@ -1,5 +1,5 @@
 name: env_flutter
-version: 0.1.1
+version: 0.1.2
 description: Easily configure any flutter application with global variables using a `.env` files.
 homepage: https://github.com/rajkovukovic/env_flutter
 environment:
