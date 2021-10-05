@@ -95,7 +95,8 @@ class DotEnv {
         ];
       }
     }
-    final linesFromFile = await _getEntriesFromFiles(fileNames);
+    final linesFromFile =
+        await _getEntriesFromFiles(fileNames.reversed.toList());
     final linesFromMergeWith = mergeWith.entries
         .map((entry) => "${entry.key}=${entry.value}")
         .toList();
