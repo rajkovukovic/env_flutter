@@ -60,12 +60,13 @@ class DotEnv {
 
   String? maybeGet(String name, {String? fallback}) => env[name] ?? fallback;
 
-  /// Loads environment variables from the env file into a map
+  /// Loads environment variables from the list of env files into a map
   /// Merge with any entries defined in [mergeWith]
-  Future<void> load(
-      {List<String>? fileNames,
-      Parser parser = const Parser(),
-      Map<String, String> mergeWith = const {}}) async {
+  Future<void> load({
+    List<String>? fileNames,
+    Parser parser = const Parser(),
+    Map<String, String> mergeWith = const {},
+  }) async {
     clean();
     if (fileNames == null) {
       // test mode
@@ -95,30 +96,49 @@ class DotEnv {
         ];
       }
     }
-    final linesFromFile =
-        await _getEntriesFromFiles(fileNames.reversed.toList());
+
+    final linesFromEnvFiles = await _getEntriesFromFiles(fileNames);
+
+    processLoadedLines(
+      linesFromEnvFiles: linesFromEnvFiles,
+      parser: parser,
+      mergeWith: mergeWith,
+    );
+  }
+
+  void processLoadedLines({
+    required List<List<String>> linesFromEnvFiles,
+    required Parser parser,
+    required Map<String, String> mergeWith,
+  }) {
     final linesFromMergeWith = mergeWith.entries
         .map((entry) => "${entry.key}=${entry.value}")
         .toList();
-    final allLines = linesFromMergeWith..addAll(linesFromFile);
-    final envEntries = parser.parse(allLines);
-    _envMap.addAll(envEntries);
+
+    final allLines = [
+      for (var lines in linesFromEnvFiles) ...lines,
+      ...linesFromMergeWith,
+    ];
+
+    _envMap.addAll(parser.parse(allLines));
+
     _isInitialized = true;
   }
 
-  void testLoad(
-      {String fileInput = '',
-      Parser parser = const Parser(),
-      Map<String, String> mergeWith = const {}}) {
+  void testLoad({
+    required List<String> envFilesAsStrings,
+    Parser parser = const Parser(),
+    Map<String, String> mergeWith = const {},
+  }) {
+    _isInitialized = false;
     clean();
-    final linesFromFile = fileInput.split('\n');
-    final linesFromMergeWith = mergeWith.entries
-        .map((entry) => "${entry.key}=${entry.value}")
-        .toList();
-    final allLines = linesFromMergeWith..addAll(linesFromFile);
-    final envEntries = parser.parse(allLines);
-    _envMap.addAll(envEntries);
-    _isInitialized = true;
+    processLoadedLines(
+      linesFromEnvFiles: envFilesAsStrings
+          .map((fileContent) => fileContent.split('\n').toList())
+          .toList(),
+      parser: parser,
+      mergeWith: mergeWith,
+    );
   }
 
   /// True if all supplied variables have nonempty value; false otherwise.
@@ -127,38 +147,27 @@ class DotEnv {
   bool isEveryDefined(Iterable<String> vars) =>
       vars.every((k) => _envMap[k]?.isNotEmpty ?? false);
 
-  Future<List<String>> _getEntriesFromFiles(List<String> filenames) async {
-    try {
-      WidgetsFlutterBinding.ensureInitialized();
-      final listOfFiles = await Future.wait(
-        filenames.map(_getEntriesFromFile),
-      );
+  Future<List<List<String>>> _getEntriesFromFiles(
+    List<String> filenames,
+  ) async {
+    WidgetsFlutterBinding.ensureInitialized();
 
-      final allLines = listOfFiles
-          // ignore: avoid_types_on_closure_parameters
-          .fold(<String>[], (List<String> acc, List<String> cur) {
-            acc.addAll(cur);
-            return acc;
-          })
-          .where((line) => line.trim().isNotEmpty)
-          .toList();
-
-      if (allLines.isEmpty) {
-        throw EmptyEnvFileError();
-      }
-
-      return allLines;
-    } on FlutterError {
-      return Future.value(<String>[]);
-    }
+    return await Future.wait(
+      filenames.map(_getEntriesFromFile),
+    );
   }
 
   Future<List<String>> _getEntriesFromFile(String filename) async {
     try {
       WidgetsFlutterBinding.ensureInitialized();
+      // debugPrint('reading env file "$filename"');
       var envString = await rootBundle.loadString(filename);
+      // debugPrint('env file "$filename" content:\n$filename');
       return envString.split('\n');
-    } on FlutterError {
+    } on FlutterError catch (error) {
+      // if one file does not exist, just skip it
+      // but log error to console
+      // debugPrint('Error reading env file "$filename\n$error');
       return Future.value(<String>[]);
     }
   }

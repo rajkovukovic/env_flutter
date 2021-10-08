@@ -6,7 +6,13 @@ void main() {
   group('dotenv', () {
     setUp(() {
       print(Directory.current.toString());
-      dotenv.testLoad(fileInput: File('test/.env').readAsStringSync()); // mergeWith: Platform.environment
+      dotenv.testLoad(
+        envFilesAsStrings: [
+          File('test/.env').readAsStringSync(),
+          File('test/.env.production').readAsStringSync(),
+        ],
+        // mergeWith: Platform.environment
+      );
     });
     test('able to load .env', () {
       expect(dotenv.env['FOO'], 'foo');
@@ -14,7 +20,7 @@ void main() {
       expect(dotenv.env['FOOBAR'], '\$FOOfoobar');
       expect(dotenv.env['ESCAPED_DOLLAR_SIGN'], '\$1000');
       expect(dotenv.env['ESCAPED_QUOTE'], "'");
-      expect(dotenv.env['BASIC'], 'basic');
+      expect(dotenv.env['BASIC'], 'basic1');
       expect(dotenv.env['AFTER_LINE'], 'after_line');
       expect(dotenv.env['EMPTY'], '');
       expect(dotenv.env['SINGLE_QUOTES'], 'single_quotes');
@@ -45,6 +51,9 @@ void main() {
       expect(dotenv.maybeGet('COMMENTS', fallback: 'sample'), 'sample');
       expect(dotenv.maybeGet('COMMENTS'), null);
       expect(dotenv.maybeGet('EQUAL_SIGNS', fallback: 'sample'), 'equals==');
+    });
+    test('variable is overwritten by a later file', () {
+      expect(dotenv.get('SERVER', fallback: 'SERVER_fallback'), 'example.com');
     });
   });
 }
