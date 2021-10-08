@@ -2,8 +2,6 @@
 
 # Tags and publishes the package.
 #
-# Required env vars:
-#   GH_KEY_ID is used to sign the tag.
 
 package=$(sed -nr -e 's|^name: (.+)$|\1|p' pubspec.yaml)
 version=$(sed -nr -e 's|^version: (.+)$|\1|p' pubspec.yaml)
