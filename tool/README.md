@@ -3,7 +3,7 @@ tool
 
 _Consider calling these in a git pre-commit hook._
 
-Ensure `~/.pub_cache/bin` is in your `$PATH`.
+Ensure `~/.pub-cache/bin` is in your `$PATH`.
 
 ### [fmt.sh](fmt.sh)
 

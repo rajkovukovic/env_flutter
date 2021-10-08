@@ -37,6 +37,7 @@ EOF
 check_commit
 check_changelog
 
-git tag --cleanup=whitespace -u $GH_KEY_ID v$version && \
+# git tag --cleanup=whitespace -u $GH_KEY_ID v$version && \
+git tag --cleanup=whitespace -a v$version -m "release of version $version" && \
 git push --tags && \
-pub publish
+dart pub publish

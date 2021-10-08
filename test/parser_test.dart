@@ -95,9 +95,9 @@ void main() {
       expect(out, equals({'foo': 'bar', 'baz': 'qux'}));
     });
 
-    test('it ignores duplicate keys', () {
+    test('it overwrites duplicate keys with later one', () {
       var out = _psr.parse(['foo=bar', 'foo=baz']);
-      expect(out, equals({'foo': 'bar'}));
+      expect(out, equals({'foo': 'baz'}));
     });
     test('it substitutes known variables into other values', () {
       var out = _psr.parse(['foo=bar', r'baz=super$foo${foo}']);
